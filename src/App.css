@@ -1,5 +1,14 @@
+:rosot {
+  background: rgb(42, 1, 61);
+}
+
 .App {
   text-align: center;
+}
+
+a {
+  color: black;
+  font-size: 1.4em;
 }
 
 div {
@@ -26,12 +35,28 @@ div {
 
 .card {
   width: 60%;
-  height: 260px;
+  height: auto;
   margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: thin solid rgb(0, 103, 198);
+  border-bottom: thin solid rgb(0, 103, 198);
+}
+
+.card-body {
+  margin-left: 3em;
+  margin-right: 3em;
+  margin-top: 3em;
+  font-size: 1.1em;
+  text-decoration: none;
+}
+
+a.card-text {
+  text-decoration: none;
+}
+
+a.card-text:hover {
+  text-decoration: underline;
 }
 
 .card-img-top {
@@ -39,18 +64,4 @@ div {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
-}
-
-.card-text {
-  width: 60%;
-}
-
-a.card-text {
-  font-size: 1.5em;
-  padding: 10px;
-  width: 60%;
-}
-
-a.card-body {
-  width: 100%;
 }

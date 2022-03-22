@@ -14,8 +14,6 @@ export default function Body() {
           <div className="card">
             <div className="card-body">
               {"\n"}
-              <img src="..." className="card-img-top" alt="..."></img>
-              {"\n"}
               <a href={article.url} className="card-text">
                 {" "}
                 {article.title}{" "}
