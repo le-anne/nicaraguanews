@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/nicaraguanews/static/css/main.3390ac8d.css",
+    "main.js": "/nicaraguanews/static/js/main.882243ed.js",
+    "index.html": "/nicaraguanews/index.html",
+    "main.3390ac8d.css.map": "/nicaraguanews/static/css/main.3390ac8d.css.map",
+    "main.882243ed.js.map": "/nicaraguanews/static/js/main.882243ed.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3390ac8d.css",
+    "static/js/main.882243ed.js"
+  ]
+}
