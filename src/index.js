@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
-import "./news";
-import "./components/Title"
+import "./App.css";
+import Title from "./components/Title";
+import Body from "./components/Body";
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Title />
+    <Body />
   </React.StrictMode>,
   document.getElementById("root")
 );

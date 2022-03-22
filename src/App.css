@@ -25,3 +25,16 @@ div.title {
   align-content: center;
 }
 
+.cards {
+  width: calc(100% - 80px);
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 40px;
+  border: thick double #32a1ce;
+}
+
+
+div {
+  white-space: pre-wrap;
+} 
