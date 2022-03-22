@@ -2,6 +2,9 @@
   text-align: center;
 }
 
+div {
+  white-space: pre-wrap;
+}
 
 .Title {
   box-sizing: border-box;
@@ -21,20 +24,33 @@
   padding-bottom: 1.5em;
 }
 
-div.title {
-  align-content: center;
-}
-
-.cards {
-  width: calc(100% - 80px);
+.card {
+  width: 60%;
+  height: 260px;
   margin: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 40px;
-  border: thick double #32a1ce;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: thin solid rgb(0, 103, 198);
 }
 
+.card-img-top {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 
-div {
-  white-space: pre-wrap;
-} 
+.card-text {
+  width: 60%;
+}
+
+a.card-text {
+  font-size: 1.5em;
+  padding: 10px;
+  width: 60%;
+}
+
+a.card-body {
+  width: 100%;
+}
