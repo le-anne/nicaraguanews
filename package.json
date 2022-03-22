@@ -1,5 +1,6 @@
 {
   "name": "nicaraguanews",
+  "homepage": "https://le-anne.github.io/nicaraguanews/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
