@@ -7,6 +7,8 @@ export default function Body() {
     getArticles().then(setData);
   }, []);
 
+
+
   return (
     <div>
       {data.map((article) => {
@@ -16,6 +18,7 @@ export default function Body() {
               {"\n"}
               <a href={article.url} className="card-text">
                 {" "}
+                {"\n"}
                 {article.title}{" "}
               </a>
               {"\n"}

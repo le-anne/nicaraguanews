@@ -14,3 +14,4 @@ fetch("https://nicaragua-news-en-english.p.rapidapi.com/news", {
   .catch((err) => {
     console.error(err);
   });
+  
