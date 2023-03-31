@@ -12,13 +12,15 @@ fetch("https://nicaragua-news-en-english.p.rapidapi.com/news", options)
   .catch((err) => console.error(err));
 */
 
- export async function getArticles(){
-      try{
-          const result = await fetch("https://nicaragua-news-en-english.p.rapidapi.com/news", options)
-          const json = await result.json()
-          return json
-
-
-        } catch(error){
-            console.error(error)
-        }}
+export async function getArticles() {
+  try {
+    const result = await fetch(
+      "https://nicaragua-news-en-english.p.rapidapi.com/news",
+      options
+    );
+    const json = await result.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+  }
+}
