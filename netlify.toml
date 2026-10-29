@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/api/news"
+  to = "/.netlify/functions/news"
+  status = 200
+
+[[redirects]]
+  from = "/api/sources"
+  to = "/.netlify/functions/sources"
+  status = 200
+
+[[redirects]]
+  from = "/news"
+  to = "/.netlify/functions/news"
+  status = 200
