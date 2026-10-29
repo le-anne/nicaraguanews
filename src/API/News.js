@@ -1,24 +1,45 @@
-const options = {
-  method: "GET",
-  headers: {
-    "X-RapidAPI-Host": "nicaragua-news-en-english.p.rapidapi.com",
-    "X-RapidAPI-Key": "ba24453ed6mshf63b94eccba3171p1c4965jsnf3c1b12fbe39",
-  },
-};
-/* 
-fetch("https://nicaragua-news-en-english.p.rapidapi.com/news", options)
-  .then((response) => response.json())
-  .then((response) => console.log(response))
-  .catch((err) => console.error(err));
-*/
+const API_BASE = process.env.REACT_APP_API_URL || "";
 
- export async function getArticles(){
-      try{
-          const result = await fetch("https://nicaragua-news-en-english.p.rapidapi.com/news", options)
-          const json = await result.json()
-          return json
+/**
+ * Fetch aggregated Nicaragua news articles.
+ * Returns an array of { title, url, source, publishedAt?, sourceId? }.
+ * Always resolves to an array (empty on failure) so callers can map safely.
+ */
+export async function getArticles() {
+  try {
+    const response = await fetch(`${API_BASE}/api/news`);
 
+    if (!response.ok) {
+      console.error("News API error:", response.status, await response.text());
+      return [];
+    }
 
-        } catch(error){
-            console.error(error)
-        }}
+    const json = await response.json();
+
+    if (Array.isArray(json)) {
+      return json;
+    }
+
+    if (Array.isArray(json?.articles)) {
+      return json.articles;
+    }
+
+    console.error("Unexpected news API response shape:", json);
+    return [];
+  } catch (error) {
+    console.error("Failed to fetch news:", error);
+    return [];
+  }
+}
+
+export async function getSources() {
+  try {
+    const response = await fetch(`${API_BASE}/api/sources`);
+    if (!response.ok) return [];
+    const json = await response.json();
+    return Array.isArray(json) ? json : [];
+  } catch (error) {
+    console.error("Failed to fetch sources:", error);
+    return [];
+  }
+}
