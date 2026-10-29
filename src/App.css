@@ -1,5 +1,6 @@
-:root {
-  background: rgb(42, 1, 61);
+body {
+  background: #f4f6f8;
+  margin: 0;
 }
 
 .status-message {
