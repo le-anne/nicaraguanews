@@ -8,8 +8,14 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Starts the news API (`server/index.js` on port 4000) and the React app together.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The React app proxies `/api/*` to the local API. Articles are aggregated from
+Confidencial, Havana Times, Google News, AP, Reuters, BBC, The Guardian,
+Al Jazeera, and The Washington Post.
+
+Use `npm run start:api` or `npm run start:web` to run either process alone.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.

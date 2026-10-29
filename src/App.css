@@ -1,5 +1,13 @@
-:rosot {
-  background: rgb(42, 1, 61);
+body {
+  background: #f4f6f8;
+  margin: 0;
+}
+
+.status-message {
+  width: 60%;
+  margin: 2em auto;
+  text-align: center;
+  color: #333;
 }
 
 .App {
