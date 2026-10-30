@@ -1,6 +1,8 @@
 # Nicaragua News en English
 
-A Vite + React frontend with an Express/Netlify news API that aggregates English-language Nicaragua coverage from Confidencial, Havana Times, Google News, AP, Reuters, BBC, The Guardian, Al Jazeera, and The Washington Post.
+A Vite + React frontend with an Express/Netlify news API that aggregates English-language Nicaragua coverage from Confidencial, Havana Times, The Tico Times, Google News, AP, Reuters, BBC, The Guardian, Al Jazeera, and The Washington Post.
+
+Article photos come from RSS media when present, then direct Open Graph tags, then a [Microlink](https://microlink.io) metadata fallback for publishers that block datacenter fetches (AP, Washington Post, Havana Times, and others). Optional: set `MICROLINK_API_KEY` in the environment for higher rate limits.
 
 ## Scripts
 

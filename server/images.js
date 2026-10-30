@@ -2,8 +2,9 @@ const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
 
 const FETCH_TIMEOUT_MS = 7000;
-const ENRICH_CONCURRENCY = 5;
-const MAX_ENRICH = 36;
+const MICROLINK_TIMEOUT_MS = 10000;
+const ENRICH_CONCURRENCY = 4;
+const MAX_ENRICH = 48;
 
 const LOGO_URL_RE =
   /logo|favicon|apple-touch|site-icon|brand[_-]?asset|placeholder|default[-_]share|sprite|avatar|\/plugins\/|gfl\.png|wordpress\.com\/.*gravatar|googleusercontent\.com\/.*[=/]s0-w\d+|og-default|default-meta|social[-_]?default/i;
@@ -37,6 +38,12 @@ function firstImgFromHtml(html, baseUrl) {
 
 function imageFromRssItem(item, articleUrl) {
   if (item.enclosure?.url && /^image\//i.test(item.enclosure.type || "image/")) {
+    const url = absoluteUrl(item.enclosure.url, articleUrl);
+    if (isUsableImageUrl(url)) return url;
+  }
+
+  // Some feeds put the image URL on enclosure without a type.
+  if (item.enclosure?.url && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(item.enclosure.url)) {
     const url = absoluteUrl(item.enclosure.url, articleUrl);
     if (isUsableImageUrl(url)) return url;
   }
@@ -99,6 +106,60 @@ async function fetchText(url) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+/**
+ * Microlink Open Graph API — reaches many publishers that block datacenter fetches.
+ * Optional MICROLINK_API_KEY raises rate limits: https://microlink.io/docs/api/basics/authentication
+ */
+async function fetchMicrolinkImageOnce(articleUrl) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), MICROLINK_TIMEOUT_MS);
+  try {
+    const endpoint = new URL("https://api.microlink.io");
+    endpoint.searchParams.set("url", articleUrl);
+    endpoint.searchParams.set("meta", "true");
+
+    const headers = {
+      Accept: "application/json",
+      "User-Agent": "NicaraguaNewsEnEnglish/1.0 (+https://github.com/le-anne/nicaraguanews)",
+    };
+    if (process.env.MICROLINK_API_KEY) {
+      headers["x-api-key"] = process.env.MICROLINK_API_KEY;
+    }
+
+    const response = await fetch(endpoint, {
+      signal: controller.signal,
+      headers,
+    });
+    if (response.status === 429) return { retry: true, imageUrl: null };
+    if (!response.ok) return { retry: false, imageUrl: null };
+
+    const json = await response.json();
+    if (json.status !== "success") {
+      // Microlink uses fail for unreachable pages; retry once on transient fails.
+      return { retry: json.status === "fail", imageUrl: null };
+    }
+
+    const imageUrl = json.data?.image?.url || null;
+    return {
+      retry: false,
+      imageUrl: isUsableImageUrl(imageUrl) ? imageUrl : null,
+    };
+  } catch {
+    return { retry: true, imageUrl: null };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchMicrolinkImage(articleUrl) {
+  const first = await fetchMicrolinkImageOnce(articleUrl);
+  if (first.imageUrl) return first.imageUrl;
+  if (!first.retry) return null;
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const second = await fetchMicrolinkImageOnce(articleUrl);
+  return second.imageUrl;
 }
 
 async function resolveGoogleNewsUrl(articleUrl) {
@@ -186,11 +247,12 @@ async function enrichArticleImages(articles) {
     let url = article.url;
     let imageUrl = article.imageUrl || null;
 
-    if (!imageUrl && /news\.google\.com\/.*articles\//i.test(url)) {
+    if (/news\.google\.com\/.*articles\//i.test(url)) {
       const resolved = await resolveGoogleNewsUrl(url);
       if (resolved) url = resolved;
     }
 
+    // 1) Direct HTML / og:image (fast when the publisher allows it)
     if (!imageUrl) {
       const page = await fetchText(url);
       if (page?.html) {
@@ -199,6 +261,11 @@ async function enrichArticleImages(articles) {
           imageUrl = firstImgFromHtml(page.html, page.url || url);
         }
       }
+    }
+
+    // 2) Microlink metadata API — works for many bot-blocked publishers (AP, WaPo, Havana Times)
+    if (!imageUrl) {
+      imageUrl = await fetchMicrolinkImage(url);
     }
 
     return {
@@ -215,4 +282,5 @@ module.exports = {
   imageFromRssItem,
   enrichArticleImages,
   isUsableImageUrl,
+  fetchMicrolinkImage,
 };
