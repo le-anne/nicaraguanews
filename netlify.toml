@@ -4,7 +4,13 @@
   functions = "netlify/functions"
 
 [build.environment]
+  # Build image Node (also drives default Functions runtime when valid).
   NODE_VERSION = "22"
+
+[functions]
+  node_bundler = "esbuild"
+  # Keep function bundles on a modern Node. The Lambda *runtime* itself must be
+  # set in the Netlify UI/CLI as AWS_LAMBDA_JS_RUNTIME=nodejs22.x (not allowed here).
 
 [[redirects]]
   from = "/api/*"

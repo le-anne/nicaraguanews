@@ -25,4 +25,15 @@ Serves the production build locally.
 - Frontend: static files from `dist/`
 - API: `netlify/functions/api.js` (rewrites `/api/*`, `/news`, `/health`)
 
-Node 22 is pinned via `.nvmrc` and `netlify.toml`.
+### Node.js version
+
+Build Node is pinned to **22** via `.nvmrc`, `.node-version`, `package.json` `engines`, and `netlify.toml` (`NODE_VERSION`).
+
+Netlify Functions runtime is separate. If you see a Node 16 deprecation warning, in the Netlify UI set:
+
+1. **Project configuration → Build & deploy → Dependency management** → Node.js **22** (or rely on `.nvmrc`)
+2. Environment variable **`AWS_LAMBDA_JS_RUNTIME`** = `nodejs22.x` (Builds + Functions scopes), then **redeploy**
+
+`AWS_LAMBDA_JS_RUNTIME` cannot be set from `netlify.toml`; it must be a site env var.
+
+Optional: `MICROLINK_API_KEY` for higher photo-metadata rate limits.
