@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getArticles } from "../API/News";
+import SourceLogoFallback from "./SourceLogoFallback";
 
 function formatDate(value) {
   if (!value) return null;
@@ -22,6 +23,27 @@ function ArticleMeta({ article }) {
   );
 }
 
+function StoryMedia({ article, eager = false }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const showPhoto = Boolean(article.imageUrl) && !imageFailed;
+
+  return (
+    <div className={`story-media${showPhoto ? "" : " is-fallback"}`}>
+      {showPhoto ? (
+        <img
+          src={article.imageUrl}
+          alt=""
+          loading={eager ? "eager" : "lazy"}
+          referrerPolicy="no-referrer"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        <SourceLogoFallback article={article} />
+      )}
+    </div>
+  );
+}
+
 function FeaturedStory({ article, style }) {
   return (
     <a
@@ -31,22 +53,7 @@ function FeaturedStory({ article, style }) {
       rel="noopener noreferrer"
       style={style}
     >
-      <div className="story-featured-media">
-        {article.imageUrl ? (
-          <img
-            src={article.imageUrl}
-            alt=""
-            loading="eager"
-            referrerPolicy="no-referrer"
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-              event.currentTarget.parentElement?.classList.add("is-fallback");
-            }}
-          />
-        ) : (
-          <div className="story-fallback-art" aria-hidden="true" />
-        )}
-      </div>
+      <StoryMedia article={article} eager />
       <div className="story-featured-copy">
         <ArticleMeta article={article} />
         <h2>{article.title}</h2>
@@ -65,22 +72,7 @@ function StoryCard({ article, index }) {
       rel="noopener noreferrer"
       style={{ "--delay": `${0.08 + index * 0.04}s` }}
     >
-      <div className={`story-card-media${article.imageUrl ? "" : " is-fallback"}`}>
-        {article.imageUrl ? (
-          <img
-            src={article.imageUrl}
-            alt=""
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-              event.currentTarget.parentElement?.classList.add("is-fallback");
-            }}
-          />
-        ) : (
-          <div className="story-fallback-art" aria-hidden="true" />
-        )}
-      </div>
+      <StoryMedia article={article} />
       <div className="story-card-copy">
         <ArticleMeta article={article} />
         <h3>{article.title}</h3>
