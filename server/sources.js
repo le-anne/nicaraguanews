@@ -1,6 +1,7 @@
 /**
  * RSS sources for Nicaragua news in English.
  * Feeds marked filterNicaragua keep only items that mention Nicaragua (or related terms).
+ * Prefer direct publisher feeds when they embed media; fall back to Google News search feeds.
  */
 module.exports = [
   {
@@ -14,6 +15,25 @@ module.exports = [
     name: "Havana Times",
     url: "https://havanatimes.org/category/nicaragua/feed/",
     filterNicaragua: false,
+  },
+  {
+    id: "tico-times",
+    name: "The Tico Times",
+    url: "https://ticotimes.net/feed",
+    filterNicaragua: true,
+  },
+  {
+    id: "guardian-americas",
+    name: "The Guardian",
+    // Direct feed includes inline images in item content.
+    url: "https://www.theguardian.com/world/americas/rss",
+    filterNicaragua: true,
+  },
+  {
+    id: "bbc-latam",
+    name: "BBC",
+    url: "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml",
+    filterNicaragua: true,
   },
   {
     id: "google-news",
