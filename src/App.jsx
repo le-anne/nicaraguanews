@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "./NicaraguaHeader4.png";
 import Title from "./components/Title";
 import Body from "./components/Body";

@@ -1,11 +1,11 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { getArticles } from "../API/News";
 
 export default function Body() {
-  const [data, setData] = React.useState([]);
-  const [status, setStatus] = React.useState("loading");
+  const [data, setData] = useState([]);
+  const [status, setStatus] = useState("loading");
 
-  React.useEffect(() => {
+  useEffect(() => {
     let cancelled = false;
 
     getArticles()
@@ -38,7 +38,9 @@ export default function Body() {
   }
 
   if (status === "empty") {
-    return <p className="status-message">No articles found from the configured sources.</p>;
+    return (
+      <p className="status-message">No articles found from the configured sources.</p>
+    );
   }
 
   return (

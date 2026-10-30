@@ -1,5 +1,3 @@
-import React from "react";
-
 function Title() {
   return (
     <div className="Title">
@@ -10,7 +8,5 @@ function Title() {
     </div>
   );
 }
-
-
 
 export default Title;
