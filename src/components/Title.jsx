@@ -1,11 +1,15 @@
 function Title() {
   return (
-    <div className="Title">
-      <h1>Nicaragua News en English</h1>
-      <div className="Title-Subtitle">
-        Nicaragua news from sources all over the world.
+    <header className="masthead">
+      <div className="masthead-inner">
+        <p className="masthead-kicker">English desk</p>
+        <h1 className="masthead-brand">Nicaragua News</h1>
+        <p className="masthead-lede">
+          Headlines and photos from Confidencial, Havana Times, and major
+          international outlets covering Nicaragua.
+        </p>
       </div>
-    </div>
+    </header>
   );
 }
 

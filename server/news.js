@@ -1,7 +1,8 @@
 const Parser = require("rss-parser");
 const sources = require("./sources");
+const { imageFromRssItem, enrichArticleImages } = require("./images");
 
-const CACHE_TTL_MS = 5 * 60 * 1000;
+const CACHE_TTL_MS = 10 * 60 * 1000;
 const NICARAGUA_RE = /\b(nicaragua|nicaraguan|ortega|murillo|managua|sandinista)\b/i;
 
 // Drop low-signal publishers that dominate Google News Nicaragua results.
@@ -10,6 +11,13 @@ const BLOCKED_SOURCE_RE =
 
 const parser = new Parser({
   timeout: 15000,
+  customFields: {
+    item: [
+      ["media:content", "mediaContent", { keepArray: true }],
+      ["media:thumbnail", "mediaThumbnail", { keepArray: true }],
+      ["content:encoded", "contentEncoded"],
+    ],
+  },
   headers: {
     "User-Agent": "NicaraguaNewsEnEnglish/1.0 (+https://github.com/le-anne/nicaraguanews)",
     Accept: "application/rss+xml, application/xml, text/xml, */*",
@@ -55,13 +63,15 @@ async function fetchSource(source) {
       const parsed = source.parsePublisherFromTitle
         ? stripPublisherSuffix(rawTitle)
         : { title: normalizeTitle(rawTitle), publisher: null };
+      const url = item.link || item.guid || "";
 
       return {
         title: parsed.title,
-        url: item.link || item.guid || "",
+        url,
         source: parsed.publisher || source.name,
         sourceId: source.id,
         publishedAt: item.isoDate || item.pubDate || null,
+        imageUrl: imageFromRssItem(item, url),
       };
     })
     .filter((article) => article.title && article.url)
@@ -105,7 +115,8 @@ async function aggregateArticles() {
     return bTime - aTime;
   });
 
-  return { articles: deduped, errors };
+  const withImages = await enrichArticleImages(deduped);
+  return { articles: withImages, errors };
 }
 
 async function getCachedArticles({ force = false } = {}) {
